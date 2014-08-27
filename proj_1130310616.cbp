@@ -35,6 +35,8 @@
 		<Unit filename="StreamBuffer.cpp" />
 		<Unit filename="StreamBuffer.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="program.cpp" />
+		<Unit filename="program.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

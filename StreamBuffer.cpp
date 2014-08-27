@@ -1,5 +1,6 @@
-#include<iostream>
-#include<stdio.h>
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
 #include <stdlib.h>
 #include "StreamBuffer.h"// for Code::Block
 
@@ -41,8 +42,8 @@ int StreamBuffer::ReceiveDate(unsigned int offset, unsigned int bytes, char *pDa
 
     unsigned int iBytes = 0;
 
-
-    if (offset + bytes > m_offset + m_iBufferLen)// 若缓冲区空间不够则将数据前移
+    //若缓冲区空间不够则将数据前移，因为此时认为head之前数据已经排空，故不涉及丢包
+    if (offset + bytes > m_offset + m_iBufferLen)
     {
         memcpy(m_pData, head, m_iBufferLen - (head - m_pData));
         tail -= head - m_pData;
@@ -50,17 +51,35 @@ int StreamBuffer::ReceiveDate(unsigned int offset, unsigned int bytes, char *pDa
         head = m_pData;
     }
 
-
-    for ( ; iBytes<bytes; iBytes++)
-        m_pData[iBytes+offset-m_offset] = pData[iBytes];//放入缓冲区
-
-    packInfo.push(make_pair(offset, bytes));    // 将数据包信息存入优先队列
-
-    if (bytes+offset-m_offset > m_iBufferLen*0.8)//超过缓存区一定部分而头部连续数据还未写入就放弃
+    if (offset<m_offset)//更正实验二中的错误，offset<m_offset时把数据放在缓冲区头部
     {
-        head = m_pData - m_offset + packInfo. top().first;//下一段连续数据的开始位置
-        tail = head + packInfo.top().second;//下一段连续数据的末尾
-        packInfo.pop();//弹出队首元素
+        for (int i=m_iBufferLen-bytes; i>=0; i--)
+            m_pData[i+bytes] = m_pData[i];
+        memcpy(m_pData,pData,bytes);
+
+        head = m_pData;
+        tail = m_pData + bytes;
+
+        packInfo.push(make_pair(offset,bytes));
+    }
+    else
+    {
+        for ( ; iBytes<bytes; iBytes++)
+            m_pData[iBytes+offset-m_offset] = pData[iBytes];//放入缓冲区
+
+        packInfo.push(make_pair(offset, bytes));    // 将数据包信息存入优先队列
+
+        if (bytes+offset-m_offset > m_iBufferLen*0.8)//超过缓存区一定部分而头部连续数据还未写入就放弃
+        {
+            //输出丢包信息，依然是head之前已经排空所以只有head和下一个head之间算是丢包
+            ofstream errlog("err.log");
+            errlog << m_offset+head-m_pData << " to " << packInfo.top().first << " was lost!" << endl;
+
+            head = m_pData - m_offset + packInfo. top().first;//下一段连续数据的开始位置
+            tail = head + packInfo.top().second;//下一段连续数据的末尾
+            packInfo.pop();//弹出队首元素
+        }
+
     }
 
    return iBytes;// bytes the buffer saved
@@ -110,3 +129,39 @@ int StreamBuffer::RemoveData(int iBytes)
 
    return iBytesRemoved;
 };
+
+/*
+功能：排空剩余数据
+参数：指向目标文件的指针fpDstFile
+*/
+void StreamBuffer::ClearData(FILE *fpDstFile)
+{
+    while (!packInfo.empty())
+    {
+       //输出丢包信息
+        ofstream errlog("err.log");
+        errlog << m_offset+head-m_pData << " to " << packInfo.top().first << " was lost!" << endl;
+
+       head = m_pData - m_offset + packInfo. top().first;//剩余连续数据的开始位置
+       fseek(fpDstFile,packInfo.top().first,SEEK_SET);
+       fwrite(head,packInfo.top().second,1,fpDstFile);
+       packInfo.pop();
+
+    }
+}
+
+/*
+返回缓冲区当前在文件中的偏移量
+*/
+unsigned int StreamBuffer::GetOffset()
+{
+    return m_offset;
+}
+
+/*
+返回缓冲区总长度
+*/
+int StreamBuffer::GetBufferLen()
+{
+    return m_iBufferLen;
+}

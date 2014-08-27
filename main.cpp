@@ -141,6 +141,8 @@ int main()
 		fwrite(pOutData,iContinueBytes,1,fpDstFile);
 	}
 
+    MyBuffer.ClearData(fpDstFile);
+
     fclose(fpDstFile);
     fclose(fpSrcFile);
 

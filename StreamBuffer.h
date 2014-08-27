@@ -15,10 +15,12 @@ class StreamBuffer
     StreamBuffer();
     StreamBuffer(int iLen);
     ~StreamBuffer();
-	int ReceiveDate(unsigned int offset, unsigned int bytes, char *pData);
-	int ContinueBytes(unsigned int &iDataOffset, char* &pData);
-	int RemoveData(int iBytes);
-	void ClearData();
+	int ReceiveDate(unsigned int offset, unsigned int bytes, char *pData);//接收数据
+	int ContinueBytes(unsigned int &iDataOffset, char* &pData);//获取缓冲区中排好序的数据长度、第一个字节的偏移量和数据指针
+	int RemoveData(int iBytes);//删除 用过的数据
+	void ClearData(FILE *fpDstFile);//排空剩余数据
+	unsigned int GetOffset();//用来给program获取缓冲区当前在文件中的偏移量
+	int GetBufferLen();//用来给program获取缓冲区总长度
 
  private:
     char *m_pData;//存数据的buffer，也可以用指针

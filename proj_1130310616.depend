@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1408863717 source:f:\c++\proj_1130310616\main.cpp
+1409037159 source:f:\c++\proj_1130310616\main.cpp
 	<iostream>
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
 	"StreamBuffer.h"
 
-1408867538 f:\c++\proj_1130310616\streambuffer.h
+1409119413 f:\c++\proj_1130310616\streambuffer.h
 	<iostream>
 	<stdio.h>
 	<stdlib.h>
@@ -15,9 +15,18 @@
 	<queue>
 	<utility>
 
-1408721115 source:f:\c++\proj_1130310616\streambuffer.cpp
+1409119423 source:f:\c++\proj_1130310616\streambuffer.cpp
 	<iostream>
+	<fstream>
 	<stdio.h>
 	<stdlib.h>
+	"StreamBuffer.h"
+
+1409122471 source:f:\c++\proj_1130310616\program.cpp
+	"program.h"
+	<string.h>
+
+1409122485 f:\c++\proj_1130310616\program.h
+	<string.h>
 	"StreamBuffer.h"
 
