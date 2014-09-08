@@ -32,11 +32,13 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="BufferPool.cpp" />
+		<Unit filename="BufferPool.h" />
+		<Unit filename="Program.cpp" />
+		<Unit filename="Program.h" />
 		<Unit filename="StreamBuffer.cpp" />
 		<Unit filename="StreamBuffer.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="program.cpp" />
-		<Unit filename="program.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

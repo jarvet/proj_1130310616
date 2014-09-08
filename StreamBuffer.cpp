@@ -72,7 +72,7 @@ int StreamBuffer::ReceiveDate(unsigned int offset, unsigned int bytes, char *pDa
         if (bytes+offset-m_offset > m_iBufferLen*0.8)//超过缓存区一定部分而头部连续数据还未写入就放弃
         {
             //输出丢包信息，依然是head之前已经排空所以只有head和下一个head之间算是丢包
-            ofstream errlog("err.log");
+            ofstream errlog("err.log",ios::app);
             errlog << m_offset+head-m_pData << " to " << packInfo.top().first << " was lost!" << endl;
 
             head = m_pData - m_offset + packInfo. top().first;//下一段连续数据的开始位置
@@ -139,7 +139,7 @@ void StreamBuffer::ClearData(FILE *fpDstFile)
     while (!packInfo.empty())
     {
        //输出丢包信息
-        ofstream errlog("err.log");
+        ofstream errlog("err.log",ios::app);
         errlog << m_offset+head-m_pData << " to " << packInfo.top().first << " was lost!" << endl;
 
        head = m_pData - m_offset + packInfo. top().first;//剩余连续数据的开始位置

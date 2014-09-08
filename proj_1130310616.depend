@@ -15,18 +15,24 @@
 	<queue>
 	<utility>
 
-1409119423 source:f:\c++\proj_1130310616\streambuffer.cpp
+1409395646 source:f:\c++\proj_1130310616\streambuffer.cpp
 	<iostream>
 	<fstream>
 	<stdio.h>
 	<stdlib.h>
 	"StreamBuffer.h"
 
-1409122471 source:f:\c++\proj_1130310616\program.cpp
-	"program.h"
+1409549801 source:f:\c++\proj_1130310616\program.cpp
+	"Program.h"
 	<string.h>
 
-1409122485 f:\c++\proj_1130310616\program.h
+1409299605 f:\c++\proj_1130310616\program.h
 	<string.h>
+	"StreamBuffer.h"
+
+1409661206 source:f:\c++\proj_1130310616\bufferpool.cpp
+	"BufferPool.h"
+
+1409661206 f:\c++\proj_1130310616\bufferpool.h
 	"StreamBuffer.h"
 

@@ -1,6 +1,7 @@
-#include "program.h"
+#include "Program.h"
 #include <string.h>
-program::program(int id)
+
+Program::Program(int id)
 {
     m_id = id;
     l_buffer = new BufferList;
@@ -8,7 +9,7 @@ program::program(int id)
     l_buffer->next = NULL;
 }
 
-program::~program()
+Program::~Program()
 {
     delete l_buffer;
 }
@@ -19,13 +20,11 @@ program::~program()
     offset：数据在文件中的偏移量
     pData：指向数据的指针
 */
-void program::Receive(unsigned int offset, char *pData)
+void Program::Receive(unsigned int offset, char *pData)
 {
     if (l_buffer->buff == NULL)//添一段，初始的情况下
     {
         l_buffer->buff = new StreamBuffer;
-        //
-        //
         l_buffer->next = NULL;
         l_buffer->buff->ReceiveDate(offset, strlen(pData), pData);
     }
@@ -36,7 +35,7 @@ void program::Receive(unsigned int offset, char *pData)
         {
             if (offset >= temp->buff->GetOffset()
             && offset+strlen(pData) < temp->buff->GetOffset()+temp->buff->GetOffset())
-            {//当前缓冲区能够容乃下数据
+            {//当前缓冲区能够容纳下数据
                 temp->buff->ReceiveDate(offset, strlen(pData), pData);
                 break;
             }
@@ -62,8 +61,8 @@ void program::Receive(unsigned int offset, char *pData)
 功能：将数据写入文件
 参数：要写入的文件地址
 */
-void program::Write(FILE *fpDstFile)
-{//这段基本照着原来的框架写的……
+void Program::Write(FILE *fpDstFile)
+{//这段基本照着原来的框架写……遍历输出满足条件的数据后删除
     char *pOutData;
 	unsigned int iOutDataOffset;
 	int iContinueBytes;
@@ -88,7 +87,7 @@ void program::Write(FILE *fpDstFile)
 功能：清理工作，将缓冲区剩余文件写入文件并删除缓冲区
 参数：要写入的文件地址
 */
-void program::Clean(FILE *fpDstFile)
+void Program::Clean(FILE *fpDstFile)
 {
     BufferList *temp = l_buffer;
 
